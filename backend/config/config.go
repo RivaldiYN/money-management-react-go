@@ -3,10 +3,12 @@ package config
 import (
 	"database/sql"
 	"fmt"
+
+	_ "github.com/lib/pq" // ✅ import driver PostgreSQL
 )
 
-// Database connection parameters
 const (
+	driver   = "postgres"
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
@@ -14,7 +16,6 @@ const (
 	dbname   = "money_management"
 )
 
-// InitDB initializes a connection to the PostgreSQL database
 func InitDB() (*sql.DB, error) {
 	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -24,8 +25,7 @@ func InitDB() (*sql.DB, error) {
 		return nil, err
 	}
 
-	err = db.Ping()
-	if err != nil {
+	if err := db.Ping(); err != nil {
 		return nil, err
 	}
 
